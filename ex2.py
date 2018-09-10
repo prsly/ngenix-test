@@ -30,21 +30,29 @@ def CounterDict(list_, count=1):
                    for i in set(list_)])).most_common(count)
 
 
+def activetime():
+    searchtime = re.compile(r'\d{2}:\d{2}:\d{2} ')
+    listResult = []
+    for i in logs:
+        listResult.append(''.join(searchtime.findall(i))[0:2])
+    print(CounterDict(listResult))
+
+
 search = re.compile(r'^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.)' +
                     r'{3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)')
 if len(sys.argv) != 2:
     show_usage()
 with open('{i}'.format(i=sys.argv[1]), 'r') as file:
     logs = [row.strip() for row in file]
-choose = int(input('Введите пункт меню\n' +
-                   '1 - TOP-5 (по количеству запросов) IP-адресов\n' +
-                   '2 - IP-адрес, который больше всех получил 404 статус код' +
-                   '\n3 - Cамый активный час (по количеству запросов)\n>> '))
-if choose == 1:
+choose = input('Введите пункт меню\n' +
+               '1 - TOP-5 (по количеству запросов) IP-адресов\n' +
+               '2 - IP-адрес, который больше всех получил 404 статус код' +
+               '\n3 - Cамый активный час (по количеству запросов)\n>> ')
+if choose == '1':
     top5()
-elif choose == 2:
+elif choose == '2':
     error404()
-elif choose == 3:
+elif choose == '3':
     activetime()
 else:
     print('Неверный ввод')
