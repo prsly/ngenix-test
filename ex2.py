@@ -3,10 +3,10 @@ import sys
 from collections import Counter
 
 
-search = re.compile(r'^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.)' +
-                    r'{3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)')
+__search__ = re.compile(r'^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.)' +
+                        r'{3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)')
 with open('{i}'.format(i=sys.argv[1]), 'r') as file:
-    logs = [row.strip() for row in file]
+    __logs__ = [row.strip() for row in file]
 
 
 def show_usage():
@@ -14,10 +14,15 @@ def show_usage():
     sys.exit(1)
 
 
+def counter_dict(list_, count=1):
+    return Counter(dict([(i, list_.count(i))
+                   for i in set(list_)])).most_common(count)
+
+
 def top5():
     listResult = []
-    for i in logs:
-        listResult.append(''.join(search.findall(i)))
+    for i in __logs__:
+        listResult.append(''.join(__search__.findall(i)))
     top5 = counter_dict(listResult, 5)
     for i in top5:
         print(i)
@@ -25,21 +30,16 @@ def top5():
 
 def error404():
     listResult = []
-    for i in logs:
-        if search.findall(i) and i.find('404') != -1:
-            listResult.append(''.join(search.findall(i)))
+    for i in __logs__:
+        if __search__.findall(i) and i.find('404') != -1:
+            listResult.append(''.join(__search__.findall(i)))
     print(counter_dict(listResult))
-
-
-def counter_dict(list_, count=1):
-    return Counter(dict([(i, list_.count(i))
-                   for i in set(list_)])).most_common(count)
 
 
 def active_time():
     searchtime = re.compile(r'\d{2}:\d{2}:\d{2} ')
     listResult = []
-    for i in logs:
+    for i in __logs__:
         listResult.append(''.join(searchtime.findall(i))[0:2])
     print(counter_dict(listResult))
 

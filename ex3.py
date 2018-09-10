@@ -16,7 +16,8 @@ def balance(brackets):
             if ((len(stack) > 0) and ('[' == stack[len(stack)-1])):
                 stack.pop()
             else:
-                return 'Некорректно закрыты скобки'
+                stack = ' '
+                break
     if len(stack) == 0:
         return 'Корректно закрыты скобки'
     else:
