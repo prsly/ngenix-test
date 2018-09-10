@@ -1,12 +1,10 @@
 import re
 import sys
-from collections import Counter
 
+from log import Log
 
-__search__ = re.compile(r'^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.)' +
-                        r'{3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)')
-with open('{i}'.format(i=sys.argv[1]), 'r') as file:
-    __logs__ = [row.strip() for row in file]
+__search_re__ = re.compile(r'^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.)' +
+                           r'{3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)')
 
 
 def show_usage():
@@ -14,38 +12,24 @@ def show_usage():
     sys.exit(1)
 
 
-def counter_dict(list_, count=1):
-    return Counter(dict([(i, list_.count(i))
-                   for i in set(list_)])).most_common(count)
-
-
 def top5():
-    listResult = []
-    for i in __logs__:
-        listResult.append(''.join(__search__.findall(i)))
-    top5 = counter_dict(listResult, 5)
+    top5 = log.search(__search_re__, count=5)
     for i in top5:
         print(i)
 
 
 def error404():
-    listResult = []
-    for i in __logs__:
-        if __search__.findall(i) and i.find('404') != -1:
-            listResult.append(''.join(__search__.findall(i)))
-    print(counter_dict(listResult))
+    print(log.search(__search_re__, '404'))
 
 
 def active_time():
-    searchtime = re.compile(r'\d{2}:\d{2}:\d{2} ')
-    listResult = []
-    for i in __logs__:
-        listResult.append(''.join(searchtime.findall(i))[0:2])
-    print(counter_dict(listResult))
+    searchtime_re = re.compile(r'\d{2}:\d{2}:\d{2} ')
+    print(log.searchtime(searchtime_re))
 
 
 if len(sys.argv) != 2:
     show_usage()
+log = Log(sys.argv[1])
 choose = input('Введите пункт меню\n' +
                '1 - TOP-5 (по количеству запросов) IP-адресов\n' +
                '2 - IP-адрес, который больше всех получил 404 статус код' +
