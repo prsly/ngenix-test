@@ -13,13 +13,13 @@ def show_usage():
 
 
 def top5():
-    top5 = log.search(__search_re__, count=5)
+    top5 = log.search(__search_re__, 5)
     for i in top5:
         print(i)
 
 
 def error404():
-    print(log.search(__search_re__, '404'))
+    print(log.search(__search_re__, code='404'))
 
 
 def active_time():
