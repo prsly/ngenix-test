@@ -10,8 +10,7 @@ class Log:
             self._logs = [row.strip() for row in file]
 
     def counter(self, count):
-        return Counter(dict([(i, self.listResult.count(i))
-                       for i in set(self.listResult)])).most_common(count)
+        return Counter(self.listResult).most_common(count)
 
     def get(self):
         return self._logs
